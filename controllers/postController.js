@@ -10,7 +10,7 @@ const connection = require('../data/db.js')    // Import della connessione al Da
 
 // --------------------------------------------------- ROTTA INDEX --------------------------------------------------------
 
-/* INDEX - mostra tutti i post */
+// INDEX - mostra tutti i post
 function index (req, res) {
 
     const query_sql = 'SELECT * FROM posts';        // Definizione della query SQL
@@ -18,13 +18,13 @@ function index (req, res) {
     // Esecuzione query SQL
     connection.query(query_sql, (err, results) => { 
 
-        // Gestione in caso di fallimento - codice di stato HTTP 500
+        // Gestione in caso di errore - codice di stato HTTP 500
         if (err) { 
             return res.status(500).json({
                 error: "Errore durante il recupero dei post dal database!"
             });
         }
-        // Gestione in caso di successo - lista dei post 
+        // Gestione in caso di successo - invia al client la lista dei post 
         res.json(results); 
     })
 }
@@ -34,7 +34,29 @@ function index (req, res) {
 
 // SHOW - mostra un post specifico
 function show(req, res) {
-    res.send("Dettagli del post: " + req.params.id);
+    const id = parseInt(req.params.id);                        // Recupero id dall'URL
+    const query_sql = 'SELECT * FROM posts WHERE id = ? ';     // Definizione della query SQL 
+
+    // Esecuzione query SQL
+    connection.query(query_sql, [id], (err, results) => {
+
+        // Gestione in caso di errore - codice di stato HTTP 500
+        if (err) {
+            return res.status(500).json({
+                error: "Errore durante il recupero del post dal database!"
+            });
+        }
+
+        // Gestione in caso di post non trovato - codice di stato HTTP 404
+        if (results.length === 0) {
+            return res.status(404).json({
+                error: "Post non trovato!"
+            });
+        }
+
+        // Gestione in caso di successo - invia al client il post richiesto
+        res.json(results[0])
+    })
 }
 
 
@@ -43,13 +65,13 @@ function show(req, res) {
 // DESTROY - Elimina un post
 function destroy(req, res) {
 
-    const id  = parseInt (req.params.id);                        // Recupero id dall'URL
+    const id  = parseInt (req.params.id);                       // Recupero id dall'URL
     const query_sql = 'DELETE FROM posts WHERE id = ? ';        // Definizione della query SQL 
 
     // Esecuzione query SQL
     connection.query(query_sql, [id], (err, results) => {
 
-        // Gestione in caso di fallimento - codice di stato HTTP 500
+        // Gestione in caso di errore - codice di stato HTTP 500
         if (err) {
             return res.status(500).json({
                 error: "Errore durante l'eliminazione del post dal database!"
