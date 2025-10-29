@@ -1,0 +1,25 @@
+{
+  "name": "express-blog-sql",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\"> Express Blog SQL </h1>",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "watch": "node --watch app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Damiana-Arangio/express-blog-sql.git"
+  },
+  "author": "Damiana Arangio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Damiana-Arangio/express-blog-sql/issues"
+  },
+  "homepage": "https://github.com/Damiana-Arangio/express-blog-sql#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "express": "^5.1.0"
+  }
+}
