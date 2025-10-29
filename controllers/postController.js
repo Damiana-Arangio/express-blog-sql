@@ -8,19 +8,20 @@ const connection = require('../data/db.js')    // Import della connessione al Da
     FUNZIONI ROTTE
 *********************/
 
-// ------------------------------------------------------------------ ROTTA INDEX ----------------------------------------------------------------------------
+// --------------------------------------------------- ROTTA INDEX --------------------------------------------------------
 
 /* INDEX - mostra tutti i post */
 function index (req, res) {
 
-    const query_sql = 'SELECT * FROM posts';        // Definizione della query SQL 
+    const query_sql = 'SELECT * FROM posts';        // Definizione della query SQL
 
-    connection.query(query_sql, (err, results) => { // Esecuzione query SQL
+    // Esecuzione query SQL
+    connection.query(query_sql, (err, results) => { 
 
         // Gestione in caso di fallimento - codice di stato HTTP 500
         if (err) { 
             return res.status(500).json({
-                error: "Errore durante il recupero dei post dal database"
+                error: "Errore durante il recupero dei post dal database!"
             });
         }
         // Gestione in caso di successo - lista dei post 
@@ -29,7 +30,7 @@ function index (req, res) {
 }
 
 
-// ------------------------------------------------------------------ ROTTA SHOW ----------------------------------------------------------------------------
+// --------------------------------------------------- ROTTA SHOW --------------------------------------------------------
 
 // SHOW - mostra un post specifico
 function show(req, res) {
@@ -37,31 +38,30 @@ function show(req, res) {
 }
 
 
-// ------------------------------------------------------------------ ROTTA STORE ----------------------------------------------------------------------------
-
-// STORE - crea un nuovo post
-function store(req, res) {
-    res.send("Creato nuovo post");
-}
-
-
-// ------------------------------------------------------------------ ROTTA UPDATE ----------------------------------------------------------------------------
-
-// UPDATE - Aggiorna un post
-function update(req, res) {
-    res.send("Aggiornato post: " + req.params.id );
-}
-
-
-// ------------------------------------------------------------------ ROTTA DESTROY  ----------------------------------------------------------------------------
+// --------------------------------------------------- ROTTA DESTROY --------------------------------------------------------
 
 // DESTROY - Elimina un post
 function destroy(req, res) {
-    res.send("Eliminato post: " + req.params.id)
+
+    const id  = parseInt (req.params.id);                        // Recupero id dall'URL
+    const query_sql = 'DELETE FROM posts WHERE id = ? ';        // Definizione della query SQL 
+
+    // Esecuzione query SQL
+    connection.query(query_sql, [id], (err, results) => {
+
+        // Gestione in caso di fallimento - codice di stato HTTP 500
+        if (err) {
+            return res.status(500).json({
+                error: "Errore durante l'eliminazione del post dal database!"
+            });
+        }
+        // Gestione in caso di successo - codice di stato HTTP 204 (No Content)
+        res.sendStatus(204);
+    })
 }
 
 
 /************
     EXPORT
 ************/
-module.exports = { index, show, store, update, destroy };  // Export funzioni controller
+module.exports = { index, show, destroy };  // Export funzioni controller
