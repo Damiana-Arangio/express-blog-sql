@@ -1,6 +1,7 @@
 /************
     IMPORT
 ************/
+const connection = require('../data/db.js')    // Import della connessione al Database 
 
 
 /********************
